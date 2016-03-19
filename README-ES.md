@@ -25,7 +25,7 @@ después haz un pull request. :zap:
 
 Usar `let foo = …` sobre `var foo = …` siempre que sea posible (y también ante la duda). Solo usar `var` si estás forzado a ello (es decir, tu *sabes* que el valor va a cambiar, por ejemplo cuando usas la propiedad `weak`).
 
-_Razón:_ La intención y el significado  de ambas palabras reservadas está clara, pero utilizar *let* por defecto es más seguro y más limpio.
+_Razonamiento:_ La intención y el significado  de ambas palabras reservadas está clara, pero utilizar *let* por defecto es más seguro y más limpio.
 
 El `let`-binding garantiza y *recalca al programador* que su valor nunca cambiará. Esto nos permite mantener una fuerte suposición de que su valor no cambiará en el código que le sigue.
 
@@ -75,13 +75,13 @@ Como alternativa, en el caso de que quieras utilizar la concatenación de Option
 foo?.callSomethingIfFooIsNotNil()
 ```
 
-_Razón:_ Es más seguro el uso de `if let`-binding para el resultado de optionals. El unwrapping forzado es más propenso a provocar errores en tiempo de ejecución.
+_Razonamiento:_ Es más seguro el uso de `if let`-binding para el resultado de optionals. El unwrapping forzado es más propenso a provocar errores en tiempo de ejecución.
 
 #### Evita utilizar implícitamente Unwrapped Optionals
 
 Donde sea posible, utiliza `let foo: FooType?` en vez de `let foo: FooType!` is `foo` puede ser nil (Por lo general, `?` se puede utilizar en vez de `!`).
 
-_Razón:_ El resultado explícito de los optionals es más seguro. Implícitamente, el unwrapped de los optionals pueden producir fallos en tiempo de ejcución.
+_Razonamiento:_ El resultado explícito de los optionals es más seguro. Implícitamente, el unwrapped de los optionals pueden producir fallos en tiempo de ejcución.
 
 #### Utilizar los getters de forma implícita en las propiedades de solo lectura y subscripts
 
@@ -91,7 +91,7 @@ Por lo tanto, escribe esto:
 
 ```swift
 var myGreatProperty: Int {
-	return 4
+    return 4
 }
 
 subscript(index: Int) -> T {
@@ -103,9 +103,9 @@ subscript(index: Int) -> T {
 
 ```swift
 var myGreatProperty: Int {
-	get {
-		return 4
-	}
+    get {
+        return 4
+    }
 }
 
 subscript(index: Int) -> T {
@@ -115,11 +115,11 @@ subscript(index: Int) -> T {
 }
 ```
 
-_Razón:_ La intención y el significado de la primera versión es clara y ocupa menos líneas de código.
+_Razonamiento:_ La intención y el significado de la primera versión es clara y ocupa menos líneas de código.
 
-#### Always specify access control explicitly for top-level definitions
+#### Espcifica siempre el control de acceso de forma expícita para definiciones de alto nivel
 
-Top-level functions, types, and variables should always have explicit access control specifiers:
+Funciones de alto nivel, tipos, y variables deberías siempre especificar explícitamente el control de acceso:
 
 ```swift
 public var whoopsGlobalState: Int
@@ -127,20 +127,19 @@ internal struct TheFez {}
 private func doTheThings(things: [Thing]) {}
 ```
 
-However, definitions within those can leave access control implicit, where appropriate:
+Sin embargo, las definiciones dentro de dichos objetos pueden expresar el control de acceso de manera implícita, en tal caso:
 
 ```swift
 internal struct TheFez {
-	var owner: Person = Joshaber()
+    var owner: Person = Joshaber()
 }
 ```
 
-_Rationale:_ It's rarely appropriate for top-level definitions to be specifically `internal`, and being explicit ensures that careful thought goes into that decision. Within a definition, reusing the same access control specifier is just duplicative, and the default is usually reasonable.
+_Razonamiento:_ Es raramente apropiado que las definiciones de alto nivel sean específicamente `internal`. Al ser explicitos asegura que tendremos en mente esa decisión. Dentro de una definición, no es necesario volver a especificar el acceso de control otra vez, sería duplicar código y el por defecto normalmente es lomás razobnable.
 
-#### When specifying a type, always associate the colon with the identifier
+#### Posición de los dos pontos al definir el tipo de un identificador.
 
-When specifying the type of an identifier, always put the colon immediately
-after the identifier, followed by a space and then the type name.
+Cuando especifiques el tipo de un identificador, coloca los dos puntos inmediatamente después del identificador, sin espacio entre ellos y a continuación escribe un espacio y el nombre del tipo.
 
 ```swift
 class SmallBatchSustainableFairtrade: Coffee { ... }
@@ -150,55 +149,53 @@ let timeToCoffee: NSTimeInterval = 2
 func makeCoffee(type: CoffeeType) -> Coffee { ... }
 ```
 
-_Rationale:_ The type specifier is saying something about the _identifier_ so
-it should be positioned with it.
+_Razonamiento:_ El tipo especifica algo sobre el _identificador_, entonces los dos puntos deben ir con el _identificador_.
 
-Also, when specifying the type of a dictionary, always put the colon immediately
-after the key type, followed by a space and then the value type.
+También, cuando especifiques el tipo de un diccionario, siempre pon los dos puntos inmediatamente después de la clave, seguido de un espacio y el valor.
 
 ```swift
 let capitals: [Country: City] = [ Sweden: Stockholm ]
 ```
 
-#### Only explicitly refer to `self` when required
+#### Solo utiliza `self` cuando sea absolutamente necesario
 
-When accessing properties or methods on `self`, leave the reference to `self` implicit by default:
+Por defecto, no escribas `self` cuando accedas a propiedades o métodos de tu propia clase. Ya se entiende de forma implicita.
 
 ```swift
 private class History {
-	var events: [Event]
+    var events: [Event]
 
-	func rewrite() {
-		events = []
-	}
+    func rewrite() {
+        events = []
+    }
 }
 ```
 
-Only include the explicit keyword when required by the language—for example, in a closure, or when parameter names conflict:
+Solamente incluye `self` de forma explícita cuando realmente sea impuesto por Swift, o cuando haya conflicto entre los nombres de los parámetros.
 
 ```swift
 extension History {
-	init(events: [Event]) {
-		self.events = events
-	}
+    init(events: [Event]) {
+        self.events = events
+    }
 
-	var whenVictorious: () -> () {
-		return {
-			self.rewrite()
-		}
-	}
+    var whenVictorious: () -> () {
+        return {
+            self.rewrite()
+        }
+    }
 }
 ```
 
-_Rationale:_ This makes the capturing semantics of `self` stand out more in closures, and avoids verbosity elsewhere.
+_Razonamiento:_ Esto nos permite destacar `self` en los sitios realmente necesarios y evita la verbosidad en el resto del código.
 
-#### Prefer structs over classes
+#### Preferlible usar structs y no classes
 
-Unless you require functionality that can only be provided by a class (like identity or deinitializers), implement a struct instead.
+Utiliza siempre struct, a menos que necesites una funcionalidad que solo se puede conseguir utilizando una clase ( como identidad o desinicializadores ).
 
-Note that inheritance is (by itself) usually _not_ a good reason to use classes, because polymorphism can be provided by protocols, and implementation reuse can be provided through composition.
+La herencia por si misma, normalmente no es una razón suficiente para utilizar clases, ya que el polimorfismo puede ser ofrecido por los protocolos, y la reusar código puede ser satisfacido por la composición.
 
-For example, this class hierarchy:
+Por ejemplo esta herencia de clase :
 
 ```swift
 class Vehicle {
@@ -226,7 +223,7 @@ class Car: Vehicle {
 }
 ```
 
-could be refactored into these definitions:
+podría ser refactorizada en estas definiciones:
 
 ```swift
 protocol Vehicle {
@@ -246,60 +243,60 @@ struct Car: Vehicle {
 }
 ```
 
-_Rationale:_ Value types are simpler, easier to reason about, and behave as expected with the `let` keyword.
+_Razonamiento:_ Los tipo valor son más simples, más fáciles de razonar, y su comportamiento es el esperado al declararlos con `let`
 
-#### Make classes `final` by default
+#### Por defecto, escribe clases `final`
 
-Classes should start as `final`, and only be changed to allow subclassing if a valid need for inheritance has been identified. Even in that case, as many definitions as possible _within_ the class should be `final` as well, following the same rules.
+Las clases deberían empezar con `final`, y sólo ser cambiadas para permitir subclases si hemos identificado una necesidad válida y suficiente para herencia. Incluso en el caso de que haya muchas definiciones, la clase también debería ser `final`, siguiendo las mismas reglas.
 
-_Rationale:_ Composition is usually preferable to inheritance, and opting _in_ to inheritance hopefully means that more thought will be put into the decision.
+_Razonamiento:_ Composición normalmente es  preferible a herencia, y si optas por la herencia, que sea porque has lo has pensado cuidadosamente.
 
 
-#### Omit type parameters where possible
+#### Omite el tipo de los parámetros siempre que sea posible
 
-Methods of parameterized types can omit type parameters on the receiving type when they’re identical to the receiver’s. For example:
-
-```swift
-struct Composite<T> {
-	…
-	func compose(other: Composite<T>) -> Composite<T> {
-		return Composite<T>(self, other)
-	}
-}
-```
-
-could be rendered as:
+Los métodos de tipos parametrizados pueden omitir el tipo de los parámetros al recibir el tipo cuando son identicos a los del receptor. Por ejemplo:
 
 ```swift
 struct Composite<T> {
-	…
-	func compose(other: Composite) -> Composite {
-		return Composite(self, other)
-	}
+    …
+    func compose(other: Composite<T>) -> Composite<T> {
+        return Composite<T>(self, other)
+    }
 }
 ```
 
-_Rationale:_ Omitting redundant type parameters clarifies the intent, and makes it obvious by contrast when the returned type takes different type parameters.
+podría ser sustituido por:
 
-#### Use whitespace around operator definitions
+```swift
+struct Composite<T> {
+    …
+    func compose(other: Composite) -> Composite {
+        return Composite(self, other)
+    }
+}
+```
 
-Use whitespace around operators when defining them. Instead of:
+_Razonamiento:_ Omitiendo el tipo de los parámetros redundantes deja más clara la intención y por el contrario , cuando especificamos el tipo, hace que sea evidiente que este es otro diferente.
+
+#### Utiliza espacios en blanco alrededor de la definición de operadores
+
+Cuando definas operadores, escribe espacios en balnco anes y después. En vez de:
 
 ```swift
 func <|(lhs: Int, rhs: Int) -> Int
 func <|<<A>(lhs: A, rhs: A) -> A
 ```
 
-write:
+escribe:
 
 ```swift
 func <| (lhs: Int, rhs: Int) -> Int
 func <|< <A>(lhs: A, rhs: A) -> A
 ```
 
-_Rationale:_ Operators consist of punctuation characters, which can make them difficult to read when immediately followed by the punctuation for a type or value parameter list. Adding whitespace separates the two more clearly.
+_Razonamiento:_ Los operadores son caracteres de puntuación, los cuales pueden ser dificiles de leer si están pegados a un tipo o parámetro. Añadiendo estos espacios, separamos los operadores de una forma clara.
 
-#### Translations
+#### Traducciones
 
 * [English Version](https://github.com/github/swift-style-guide)
 * [中文版](https://github.com/Artwalk/swift-style-guide/blob/master/README_CN.md)
