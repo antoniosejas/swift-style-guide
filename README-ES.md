@@ -1,42 +1,41 @@
-A guide to our Swift style and conventions.
+Guía de estilo y convenciones de programacón para proyectos en Swift.
 
-This is an attempt to encourage patterns that accomplish the following goals (in
-rough priority order):
+Esta guía es un intento para promover patrones que cumplan con las siguientes metas (no necesariamente en este orden):
 
- 1. Increased rigor, and decreased likelihood of programmer error
- 1. Increased clarity of intent
- 1. Reduced verbosity
- 1. Fewer debates about aesthetics
+ 1. Conseguir un código más robusto y reducir la probabilidad de error al programar
+ 2. Aumentar la legibilidad del código, consiguiendo que sea más claro y autoexplicativo
+ 3. Reducir código innecesario y redundante
+ 4. Reducir los debates sobre estética
 
-If you have suggestions, please see our [contribution guidelines](CONTRIBUTING.md),
-then open a pull request. :zap:
+Si tienes sugerencias, por favor primero lee la  [guía para colaborar](CONTRIBUTING.md),
+después haz un pull request. :zap:
 
 ----
 
-#### Whitespace
+#### Espacios en blanco
 
- * Tabs, not spaces.
- * End files with a newline.
- * Make liberal use of vertical whitespace to divide code into logical chunks.
- * Don’t leave trailing whitespace.
-   * Not even leading indentation on blank lines.
+ * Tabuladores, no espacios.
+ * El final del archivo acaba con una nueva línea.
+ * Utiliza sin miedo los espacios en blanco para separar el código en trozos entendibles.
+ * No deje espacios en blanco a la derecha de la línea.
+   *  No indentar las líneas en blanco. Estas no deben llevar ni espacios ni tabulaciones.
 
 
-#### Prefer `let`-bindings over `var`-bindings wherever possible
+#### Es preferlible utilizar `let`-bindings sobre `var`-bindings siempre que sea posible
 
-Use `let foo = …` over `var foo = …` wherever possible (and when in doubt). Only use `var` if you absolutely have to (i.e. you *know* that the value might change, e.g. when using the `weak` storage modifier).
+Usar `let foo = …` sobre `var foo = …` siempre que sea posible (y también ante la duda). Solo usar `var` si estás forzado a ello (es decir, tu *sabes* que el valor va a cambiar, por ejemplo cuando usas la propiedad `weak`).
 
-_Rationale:_ The intent and meaning of both keywords is clear, but *let-by-default* results in safer and clearer code.
+_Razón:_ La intención y el significado  de ambas palabras reservadas está clara, pero utilizar *let* por defecto es más seguro y más limpio.
 
-A `let`-binding guarantees and *clearly signals to the programmer* that its value will never change. Subsequent code can thus make stronger assumptions about its usage.
+El `let`-binding garantiza y *recalca al programador* que su valor nunca cambiará. Esto nos permite mantener una fuerte suposición de que su valor no cambiará en el código que le sigue.
 
-It becomes easier to reason about code. Had you used `var` while still making the assumption that the value never changed, you would have to manually check that.
+Se vuelve más fácil para razonar sobre el código. Al utilizar `var` creamos una duda de si el valor de la variable ha cambiado, lo que deberemos comprobar de forma manual.
 
-Accordingly, whenever you see a `var` identifier being used, assume that it will change and ask yourself why.
+En cnosecuencia, siempre que veas un identificador `var`, asume que su valor cambiará y pregúntate por qué.
 
-### Return and break early
+### Return y break
 
-When you have to meet certain criteria to continue execution, try to exit early. So, instead of this:
+Cuando tengas que comprobar ciertas condiciones para continuar la ejecución, intenta salir cuanto antes. Entonces, en vez de:
 
 ```swift
 if n.isNumber {
@@ -46,7 +45,7 @@ if n.isNumber {
 }
 ```
 
-use this:
+utiliza esto:
 ```swift
 guard n.isNumber else {
     return
@@ -54,14 +53,12 @@ guard n.isNumber else {
 // Use n here
 ```
 
-You can also do it with `if` statement, but using `guard` is prefered, because `guard` statement without `return`, `break` or `continue` produces a compile-time error, so exit is guaranteed.
+También lo puedes hacer con `if`, pero es mejor utilizar `guard`, porque `guard` nos obliga a utilizar `return`, `break` o `continue`, o el compilador lanzará un error. Por esta razón la salida está garantizada con `guard`.
 
+#### Evita usar el Unwrapping forzado de los Optionals
 
-#### Avoid Using Force-Unwrapping of Optionals
-
-If you have an identifier `foo` of type `FooType?` or `FooType!`, don't force-unwrap it to get to the underlying value (`foo!`) if possible.
-
-Instead, prefer this:
+Si tu tienes un identificador `foo` de tipo `FooType?` o `FooType!`, si es posible no fuerces su unwrap para conseguir el valor (`foo!`).
+En vez de forzar es preferible:
 
 ```swift
 if let foo = foo {
@@ -71,27 +68,26 @@ if let foo = foo {
 }
 ```
 
-Alternatively, you might want to use Swift's Optional Chaining in some of these cases, such as:
+Como alternativa, en el caso de que quieras utilizar la concatenación de Optionals, puedes hacerlo así:
 
 ```swift
 // Call the function if `foo` is not nil. If `foo` is nil, ignore we ever tried to make the call
 foo?.callSomethingIfFooIsNotNil()
 ```
 
-_Rationale:_ Explicit `if let`-binding of optionals results in safer code. Force unwrapping is more prone to lead to runtime crashes.
+_Razón:_ Es más seguro el uso de `if let`-binding para el resultado de optionals. El unwrapping forzado es más propenso a provocar errores en tiempo de ejecución.
 
-#### Avoid Using Implicitly Unwrapped Optionals
+#### Evita utilizar implícitamente Unwrapped Optionals
 
-Where possible, use `let foo: FooType?` instead of `let foo: FooType!` if `foo` may be nil (Note that in general, `?` can be used instead of `!`).
+Donde sea posible, utiliza `let foo: FooType?` en vez de `let foo: FooType!` is `foo` puede ser nil (Por lo general, `?` se puede utilizar en vez de `!`).
 
-_Rationale:_ Explicit optionals result in safer code. Implicitly unwrapped optionals have the potential of crashing at runtime.
+_Razón:_ El resultado explícito de los optionals es más seguro. Implícitamente, el unwrapped de los optionals pueden producir fallos en tiempo de ejcución.
 
-#### Prefer implicit getters on read-only properties and subscripts
+#### Utilizar los getters de forma implícita en las propiedades de solo lectura y subscripts
 
-When possible, omit the `get` keyword on read-only computed properties and
-read-only subscripts.
+Cuando sea posible, omite el `get` en las propiedades de solo lectura y en los subscripts de solo lectura.
 
-So, write these:
+Por lo tanto, escribe esto:
 
 ```swift
 var myGreatProperty: Int {
@@ -103,7 +99,7 @@ subscript(index: Int) -> T {
 }
 ```
 
-… not these:
+… y no esto:
 
 ```swift
 var myGreatProperty: Int {
@@ -119,7 +115,7 @@ subscript(index: Int) -> T {
 }
 ```
 
-_Rationale:_ The intent and meaning of the first version is clear, and results in less code.
+_Razón:_ La intención y el significado de la primera versión es clara y ocupa menos líneas de código.
 
 #### Always specify access control explicitly for top-level definitions
 
@@ -305,6 +301,7 @@ _Rationale:_ Operators consist of punctuation characters, which can make them di
 
 #### Translations
 
+* [English Version](https://github.com/github/swift-style-guide)
 * [中文版](https://github.com/Artwalk/swift-style-guide/blob/master/README_CN.md)
 * [日本語版](https://github.com/jarinosuke/swift-style-guide/blob/master/README_JP.md)
 * [한국어판](https://github.com/minsOne/swift-style-guide/blob/master/README_KR.md)
