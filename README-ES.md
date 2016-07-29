@@ -1,4 +1,4 @@
-Guía de estilo y convenciones de programacón para proyectos en Swift.
+Guía de estilo y convenciones de programación para proyectos en Swift.
 
 Esta guía es un intento para promover patrones que cumplan con las siguientes metas (no necesariamente en este orden):
 
