@@ -1,4 +1,4 @@
-Guía de estilo y convenciones de programacón para proyectos en Swift.
+Guía de estilo y convenciones de programación para proyectos en Swift.
 
 Esta guía es un intento para promover patrones que cumplan con las siguientes metas (no necesariamente en este orden):
 
@@ -17,21 +17,21 @@ después haz un pull request. :zap:
  * Tabuladores, no espacios.
  * El final del archivo acaba con una nueva línea.
  * Utiliza sin miedo los espacios en blanco para separar el código en trozos entendibles.
- * No deje espacios en blanco a la derecha de la línea.
-   *  No indentar las líneas en blanco. Estas no deben llevar ni espacios ni tabulaciones.
+ * No dejes espacios en blanco a la derecha de la línea.
+ * No indentes las líneas en blanco. Estas no deben llevar ni espacios ni tabulaciones.
 
 
-#### Es preferlible utilizar `let`-bindings sobre `var`-bindings siempre que sea posible
+#### Es preferlible utilizar `let`-bindings en lugar de `var`-bindings siempre que sea posible
 
-Usar `let foo = …` sobre `var foo = …` siempre que sea posible (y también ante la duda). Solo usar `var` si estás forzado a ello (es decir, tu *sabes* que el valor va a cambiar, por ejemplo cuando usas la propiedad `weak`).
+Usar `let foo = …` en lugar de `var foo = …` siempre que sea posible (y también ante la duda). Solo usar `var` si estás forzado a ello (es decir, tu *sabes* que el valor va a cambiar, por ejemplo cuando usas la propiedad `weak`).
 
-_Razonamiento:_ La intención y el significado  de ambas palabras reservadas está clara, pero utilizar *let* por defecto es más seguro y más limpio.
+_Razonamiento:_ La intención y el significado de ambas palabras reservadas está clara, pero utilizar *let* por defecto es más seguro y más limpio.
 
 El `let`-binding garantiza y *recalca al programador* que su valor nunca cambiará. Esto nos permite mantener una fuerte suposición de que su valor no cambiará en el código que le sigue.
 
 Se vuelve más fácil para razonar sobre el código. Al utilizar `var` creamos una duda de si el valor de la variable ha cambiado, lo que deberemos comprobar de forma manual.
 
-En cnosecuencia, siempre que veas un identificador `var`, asume que su valor cambiará y pregúntate por qué.
+En consecuencia, siempre que veas un identificador `var`, asume que su valor cambiará y pregúntate por qué.
 
 ### Return y break
 
@@ -57,7 +57,7 @@ También lo puedes hacer con `if`, pero es mejor utilizar `guard`, porque `guard
 
 #### Evita usar el Unwrapping forzado de los Optionals
 
-Si tu tienes un identificador `foo` de tipo `FooType?` o `FooType!`, si es posible no fuerces su unwrap para conseguir el valor (`foo!`).
+Si tú tienes un identificador `foo` de tipo `FooType?` o `FooType!`, si es posible no fuerces su unwrap para conseguir el valor (`foo!`).
 En vez de forzar es preferible:
 
 ```swift
@@ -81,7 +81,7 @@ _Razonamiento:_ Es más seguro el uso de `if let`-binding para el resultado de o
 
 Donde sea posible, utiliza `let foo: FooType?` en vez de `let foo: FooType!` is `foo` puede ser nil (Por lo general, `?` se puede utilizar en vez de `!`).
 
-_Razonamiento:_ El resultado explícito de los optionals es más seguro. Implícitamente, el unwrapped de los optionals pueden producir fallos en tiempo de ejcución.
+_Razonamiento:_ El resultado explícito de los optionals es más seguro. Implícitamente, el unwrapped de los optionals pueden producir fallos en tiempo de ejecución.
 
 #### Utilizar los getters de forma implícita en las propiedades de solo lectura y subscripts
 
@@ -117,7 +117,7 @@ subscript(index: Int) -> T {
 
 _Razonamiento:_ La intención y el significado de la primera versión es clara y ocupa menos líneas de código.
 
-#### Espcifica siempre el control de acceso de forma expícita para definiciones de alto nivel
+#### Especifica siempre el control de acceso de forma explícita para definiciones de alto nivel
 
 Funciones de alto nivel, tipos, y variables deberías siempre especificar explícitamente el control de acceso:
 
@@ -135,9 +135,9 @@ internal struct TheFez {
 }
 ```
 
-_Razonamiento:_ Es raramente apropiado que las definiciones de alto nivel sean específicamente `internal`. Al ser explicitos asegura que tendremos en mente esa decisión. Dentro de una definición, no es necesario volver a especificar el acceso de control otra vez, sería duplicar código y el por defecto normalmente es lomás razobnable.
+_Razonamiento:_ Es raramente apropiado que las definiciones de alto nivel sean específicamente `internal`. Al ser explícitos asegura que tendremos en mente esa decisión. Dentro de una definición, no es necesario volver a especificar el acceso de control otra vez, sería duplicar código y el por defecto normalmente es lo más razonable.
 
-#### Posición de los dos pontos al definir el tipo de un identificador.
+#### Posición de los dos puntos al definir el tipo de un identificador.
 
 Cuando especifiques el tipo de un identificador, coloca los dos puntos inmediatamente después del identificador, sin espacio entre ellos y a continuación escribe un espacio y el nombre del tipo.
 
@@ -159,7 +159,7 @@ let capitals: [Country: City] = [ Sweden: Stockholm ]
 
 #### Solo utiliza `self` cuando sea absolutamente necesario
 
-Por defecto, no escribas `self` cuando accedas a propiedades o métodos de tu propia clase. Ya se entiende de forma implicita.
+Por defecto, no escribas `self` cuando accedes a propiedades o métodos de tu propia clase. Ya se entiende de forma implícita.
 
 ```swift
 private class History {
@@ -189,11 +189,11 @@ extension History {
 
 _Razonamiento:_ Esto nos permite destacar `self` en los sitios realmente necesarios y evita la verbosidad en el resto del código.
 
-#### Preferlible usar structs y no classes
+#### Es preferible usar structs en lugar de classes
 
-Utiliza siempre struct, a menos que necesites una funcionalidad que solo se puede conseguir utilizando una clase ( como identidad o desinicializadores ).
+Utiliza siempre una struct, a menos que necesites una funcionalidad que solo se puede conseguir utilizando una clase (como identidad o desinicializadores).
 
-La herencia por si misma, normalmente no es una razón suficiente para utilizar clases, ya que el polimorfismo puede ser ofrecido por los protocolos, y la reusar código puede ser satisfacido por la composición.
+La herencia por si misma, normalmente no es una razón suficiente para utilizar clases, ya que el polimorfismo puede ser ofrecido por los protocolos, y reusar código puede ser satisfecho por la composición.
 
 Por ejemplo esta herencia de clase :
 
@@ -249,12 +249,11 @@ _Razonamiento:_ Los tipo valor son más simples, más fáciles de razonar, y su 
 
 Las clases deberían empezar con `final`, y sólo ser cambiadas para permitir subclases si hemos identificado una necesidad válida y suficiente para herencia. Incluso en el caso de que haya muchas definiciones, la clase también debería ser `final`, siguiendo las mismas reglas.
 
-_Razonamiento:_ Composición normalmente es  preferible a herencia, y si optas por la herencia, que sea porque has lo has pensado cuidadosamente.
-
+_Razonamiento:_ Composición normalmente es  preferible a herencia, y si optas por la herencia, que sea porque lo has pensado cuidadosamente.
 
 #### Omite el tipo de los parámetros siempre que sea posible
 
-Los métodos de tipos parametrizados pueden omitir el tipo de los parámetros al recibir el tipo cuando son identicos a los del receptor. Por ejemplo:
+Los métodos de tipos parametrizados pueden omitir el tipo de los parámetros al recibir el tipo cuando son idénticos a los del receptor. Por ejemplo:
 
 ```swift
 struct Composite<T> {
@@ -276,11 +275,11 @@ struct Composite<T> {
 }
 ```
 
-_Razonamiento:_ Omitiendo el tipo de los parámetros redundantes deja más clara la intención y por el contrario , cuando especificamos el tipo, hace que sea evidiente que este es otro diferente.
+_Razonamiento:_ Omitiendo el tipo de los parámetros redundantes deja más clara la intención y por el contrario , cuando especificamos el tipo, hace que sea evidente que este es otro diferente.
 
 #### Utiliza espacios en blanco alrededor de la definición de operadores
 
-Cuando definas operadores, escribe espacios en balnco anes y después. En vez de:
+Cuando definas operadores, escribe espacios en blanco antes y después. En vez de:
 
 ```swift
 func <|(lhs: Int, rhs: Int) -> Int
@@ -294,7 +293,7 @@ func <| (lhs: Int, rhs: Int) -> Int
 func <|< <A>(lhs: A, rhs: A) -> A
 ```
 
-_Razonamiento:_ Los operadores son caracteres de puntuación, los cuales pueden ser dificiles de leer si están pegados a un tipo o parámetro. Añadiendo estos espacios, separamos los operadores de una forma clara.
+_Razonamiento:_ Los operadores son caracteres de puntuación, los cuales pueden ser difíciles de leer si están pegados a un tipo o parámetro. Añadiendo estos espacios, separamos los operadores de una forma clara.
 
 #### Traducciones
 
